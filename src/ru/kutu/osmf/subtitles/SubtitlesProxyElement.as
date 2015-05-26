@@ -61,11 +61,14 @@ package ru.kutu.osmf.subtitles {
 					if (sources.length) {
 						subtitlesTrait = new SubtitlesTrait(sources, media);
 						mediaLoadTrait = media.getTrait(MediaTraitType.LOAD) as LoadTrait;
-						if (mediaLoadTrait) {
-							mediaLoadTrait.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onMediaLoadStateChange);
-						} else {
+						// Somehow the LoadEvent.LOAD_STATE_CHANGE event is never fired for vod/pseudostreaming sources
+						// although mediaLoadTrait isn't null in this case. We thus force the second method, it doesn't
+						// seem to have any downsides for other source types.
+						//if (mediaLoadTrait) {
+						//	mediaLoadTrait.addEventListener(LoadEvent.LOAD_STATE_CHANGE, onMediaLoadStateChange);
+						//} else {
 							media.addEventListener(MediaElementEvent.TRAIT_ADD, onTraitAdd);
-						}
+						//}
 						media.addEventListener(MediaElementEvent.TRAIT_REMOVE, onTraitRemove);
 						checkReady();
 					}
